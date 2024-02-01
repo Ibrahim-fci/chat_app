@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.IO Example</title>
+  </head>
+  <body>
+    <h1>Socket.IO Example</h1>
+    <div id="message"></div>
+
+    <form id="messageForm">
+      <input type="text" id="messageInput" />
+      <button type="submit">Send</button>
+    </form>
+
+    <!-- Include Socket.IO library -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script> -->
+    <script src="./socket.js"></script>
+
+    <!-- Your script to connect to the server and handle events -->
+    <script>
+      const socket = io("http://localhost:5000");
+
+      // Receive the event from the server
+      socket.on("newMessage", (data) => {
+        console.log("Received from server:", data);
+        document.getElementById("message").innerText = data;
+      });
+
+      // Send the event to the server
+      document
+        .querySelector("#messageForm")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          const message = document.getElementById("messageInput").value;
+          console.log("Sending to server:", {
+            message: message,
+            id: socket.id,
+          });
+          socket.emit("newMessage", { message, id: socket.id });
+          document.getElementById("messageInput").value = "";
+        });
+
+      socket.on("typing", (data) => {
+        document.getElementById("message").innerText = data;
+
+        setTimeout(() => {
+          document.getElementById("message").innerText = "";
+        }, 1000);
+      });
+
+      document
+        .getElementById("messageInput")
+        .addEventListener("keypress", () => {
+          socket.emit("typing", "typing...");
+        });
+    </script>
+  </body>
+</html>
