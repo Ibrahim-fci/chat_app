@@ -1,0 +1,147 @@
+<div class="container mt-5">
+  <div class="all-users-search">
+    <div class="justify-content-between d-flex w-100">
+      <input
+        type="text"
+        class="form-control w-100 rounded-5 mb-3 col-md-4"
+        placeholder="Search A User"
+        (input)="handleAllSearch($event)"
+      />
+
+      <div class="col-md-4 justify-content-end text-end logout-container">
+        <button class="" (click)="logOut()">LogOut</button>
+      </div>
+    </div>
+
+    @if (allUsersDropDownShow) {
+    <div class="users-dropdown bg-body-tertiary rounded-3">
+      @for (item of allSearchUsers; track $index) {
+
+      <div class="user-item row">
+        <div class="dropdown-item mt-2">
+          <img
+            class="col-2"
+            [src]="item.image || '../../../assets/images/me.jpg'"
+          />
+          {{ item.name }}
+          <button
+            class="ms-5 btn btn-success col-2"
+            (click)="handleAddContact(item._id)"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  <div class="chat-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control rounded-3"
+          placeholder="Search contacts..."
+          (input)="handleSearch($event)"
+        />
+        <div class="personal-image-container ms-1">
+          <img src="../../../assets/images/me.jpg" />
+        </div>
+        @if (dropdownShow) {
+        <div class="dropdown bg-body-tertiary">
+          <div class="dropdown-content p-3">
+            @for (item of searchUsers; track $index) {
+
+            <div
+              class="dropdown-item row mt-2"
+              (click)="setToUserId(item?._id)"
+            >
+              <img
+                class="col-4"
+                [src]="
+                  item.image ||
+                  '../../../assets/images/Crystal_personal.svg.png'
+                "
+              />
+
+              <span class="col-8">{{ item.name }} </span>
+            </div>
+            }
+          </div>
+        </div>
+        }
+      </div>
+
+      @for (item of contacts; track $index) {
+      <div class="contact" (click)="setToUserId(item?.contact._id)">
+        <img src="../../../assets/images/me.jpg" alt="Contact 1" />
+        <div class="contact-details">
+          <div class="contact-name">
+            {{ item?.contact.name }}
+          </div>
+          @if(item?.unreadMessages){
+
+          <span class="badge ms-5 unread-num">{{ item?.unreadMessages }}</span>
+          } @if (item?.lastMessage.form == me._id) {
+
+          <div class="lastMessage-content">
+            you:
+            {{
+              (item.lastMessage.content | textTransform) || ("" | textTransform)
+            }}
+          </div>
+          }@else {
+          <div>
+            {{ item?.contact.name }}:
+            {{
+              (item.lastMessage.content | textTransform) || ("" | textTransform)
+            }}
+          </div>
+          }
+        </div>
+      </div>
+      }
+
+      <!-- Add more contacts as needed -->
+    </div>
+
+    <!-- Chat Content -->
+    <div class="chat-content">
+      <div class="chat-header">WhatsApp Chat</div>
+      <div class="chat-messages pt-5" id="chatContainer">
+        @for (message of messages; track $index) { @if (message.to == me._id) {
+        <div class="message receiver">
+          <div class="message-bubble" id="{{ message._id }}">
+            {{ message.content }}
+          </div>
+        </div>
+        }@else{
+        <div class="message sender">
+          <div class="message-bubble" id="{{ message._id }}">
+            {{ message.content }}
+          </div>
+        </div>
+        } }
+      </div>
+      <div class="chat-input">
+        <form #loginForm="ngForm" (ngSubmit)="handelSubmit(loginForm)">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Type your message..."
+              #content="ngModel"
+              ngModel
+              name="content"
+            />
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

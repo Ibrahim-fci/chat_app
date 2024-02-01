@@ -1,0 +1,95 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-center">Register</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="myForm" (ngSubmit)="handleReactiveForm()">
+            @if (fetchErrorMsg !='') {
+            <div class="alert alert-danger">{{ fetchErrorMsg }}</div>
+            }
+            <div class="mb-3">
+              <label for="email" class="form-label">Email address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+                formControlName="email"
+              />
+              @if (myForm.controls["email"].touched &&
+              myForm.controls["email"].errors?.["email"]) {
+              <div class="text-danger">invalid email format.</div>
+              }
+            </div>
+            <div class="mb-3">
+              <label for="firstname" class="form-label">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="firstname"
+                name="firstName"
+                required
+                formControlName="name"
+              />
+              @if (myForm.controls["name"].touched &&
+              myForm.controls["name"].errors?.["required"]) {
+              <div class="text-danger">Username is required.</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+                formControlName="password"
+              />
+              @if (myForm.controls["password"].touched &&
+              myForm.controls["password"].errors?.["required"]) {
+              <div class="text-danger">password is required.</div>
+              }
+            </div>
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label"
+                >Confirm Password</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="confirmPassword"
+                name="confirmPassword"
+                required
+                formControlName="confirmPassword"
+              />
+
+              @if (myForm.controls["confirmPassword"].touched &&
+              myForm.controls["confirmPassword"].errors?.["required"]) {
+              <div class="text-danger">confirmPassword is required.</div>
+              } @if (myForm.errors?.["confirmPassword"]) {
+              <div class="text-danger">
+                confirmPassword and password not Matched.
+              </div>
+              }
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+          </form>
+          <div class="text-center mt-3">
+            <p>
+              already have an account?
+              <a href="" routerLink="/login">login in here</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
