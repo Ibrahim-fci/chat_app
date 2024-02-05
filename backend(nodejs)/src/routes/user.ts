@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import { signup, signin, getAll, getOne, getUserContactsAndLastMessage, search, addToContacts } from "../controllers/users/userController";
+import { signup, signin, getAll, getOne, getUserContactsAndLastMessage, search, addToContacts, getById } from "../controllers/users/userController";
 import { authorize } from "../middlewares/auth/auth";
 import {
   createUserValidator,
@@ -23,6 +23,8 @@ router.get("/contacts", authorize, getUserContactsAndLastMessage);
 router.get("/search", authorize, search);
 
 router.get("/contacts/:id", authorize, addToContacts);
+
+router.get("/:id", authorize, getById);
 
 
 export default router;

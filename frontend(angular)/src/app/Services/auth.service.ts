@@ -21,6 +21,9 @@ export class AuthService {
   private allSearchData = new BehaviorSubject<any>(null);
   public allSerchUsers = this.allSearchData.asObservable();
 
+  private toData = new BehaviorSubject<any>(null);
+  public toUser = this.toData.asObservable();
+
 
   constructor(private http: HttpClient) { }
 
@@ -96,6 +99,19 @@ export class AuthService {
       })
     })
 
+  }
+
+
+  getOne(id: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Token ${localStorage.getItem('user_token')}`,
+    });
+    const contacts = this.http.get(`${Host}/users/${id}`, { headers });
+    contacts.subscribe(data => {
+      this.toData.next(data)
+    })
+
+    return contacts
   }
 
 

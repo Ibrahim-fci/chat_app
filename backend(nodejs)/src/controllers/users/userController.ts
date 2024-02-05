@@ -71,6 +71,12 @@ const getOne = expressAsyncHandelar(async (req: any, res: any) => {
 });
 
 
+const getById = expressAsyncHandelar(async (req: any, res: any) => {
+  const user = await User.findById(req.params.id);
+  if (!user) return res.status(404).json({ err: new ApiError("user not found", 404) });
+  return res.status(200).json({ user });
+});
+
 
 // get user contacts and the last message beteen them
 const getUserContactsAndLastMessage = expressAsyncHandelar(async (req: any, res: any) => {
@@ -98,7 +104,10 @@ const getUserContactsAndLastMessage = expressAsyncHandelar(async (req: any, res:
     lastMessages.push({ contact, lastMessage, unreadMessages })
   }
 
-  return res.status(200).json({ contacts: lastMessages });
+
+  const sortedArrayDesc = lastMessages.sort(compareByCreatedAtDesc);
+
+  return res.status(200).json({ contacts: sortedArrayDesc });
 });
 
 const search = expressAsyncHandelar(async (req: any, res: any) => {
@@ -172,5 +181,10 @@ const addToContacts = expressAsyncHandelar(async (req: any, res: any) => {
 });
 
 
+const compareByCreatedAtDesc = (a: any, b: any) => {
+  return (new Date(b.lastMessage.created_at).getTime() as number) - (new Date(a.lastMessage.created_at).getTime() as number);
+};
 
-export { getUser, signup, signin, getAll, getOne, getUserContactsAndLastMessage, search, addToContacts };
+
+
+export { getUser, signup, signin, getAll, getOne, getUserContactsAndLastMessage, search, addToContacts, getById };

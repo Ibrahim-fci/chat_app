@@ -42,6 +42,7 @@ io.on("connection", (socket: any) => {
 
   socket.on("typing", (data: any) => {
     console.log(data);
+    io.emit("typing", data);
   });
 
   socket.on("newMessage", (data: any) => {

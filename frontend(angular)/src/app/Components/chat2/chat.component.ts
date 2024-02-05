@@ -17,12 +17,10 @@ import { CommonModule } from '@angular/common';
 export class ChatComponent {
   to: any = ''
   me: any = {}
-  toUser: any = {}
   messages: any = []
   data = this.chatService.messages
   contactsData = this.authService.contacts
   userData = this.authService.userData
-  toUserData = this.authService.toUser
   searchData = this.authService.serchUsers
   allSearchData = this.authService.allSerchUsers
   contacts: any = []
@@ -30,7 +28,6 @@ export class ChatComponent {
   allSearchUsers: any = []
   dropdownShow: boolean = false
   allUsersDropDownShow: boolean = false
-  typing: boolean = false
 
   constructor(private router: Router, private chatService: ChatService, private socket: SocketService, private authService: AuthService) {
     if (!localStorage.getItem("user_token")) {
@@ -51,18 +48,6 @@ export class ChatComponent {
         this.messages.push(data)
         this.chatService.setMessageStatus(this.to)
 
-      }
-    });
-
-    // listen on type
-    this.socket.onEvent('typing').subscribe((data) => {
-      console.log("data---->:", data)
-      console.log("to---->: ", this.to)
-      if (data.to == this.me._id && data.from == this.to) {
-        setTimeout(() => {
-          this.typing = false
-        }, 2000)
-        this.typing = true;
       }
     });
 
@@ -110,13 +95,6 @@ export class ChatComponent {
 
     this.chatService.setMessageStatus(this.to)
     this.dropdownShow = false
-
-    this.authService.getOne(this.to)
-    this.toUserData.subscribe(
-      data => {
-        this.toUser = data.user
-      }
-    )
   }
 
 
@@ -178,12 +156,6 @@ export class ChatComponent {
     this.chatService.fetchMessages(id);
     this.allUsersDropDownShow = false
 
-  }
-
-
-  handleInput(e: any) {
-
-    this.socket.emitEvent('typing', { to: this.to, from: this.me._id });
   }
 
 
